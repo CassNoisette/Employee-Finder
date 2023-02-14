@@ -5,22 +5,22 @@ const inquirer = require("inquirer");
 const fs = require("fs/promises");
 const mysql = require("mysql2");
 const util = require("util");
-const console = require("console.table");
+// const console = require("console.table");
 const { rootCertificates } = require("tls");
 
-// CONNECTION TO DATABASE
-var connection = mysql2.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "rootroot",
-    database: "employees_db"
+// // CONNECTION TO DATABASE
+// var connection = mysql.createConnection({
+//     host: "localhost",
+//     port: 3306,
+//     user: "root",
+//     password: "rootroot",
+//     database: "employees_db"
 
-});
+// });
 
-connection.connect(function (err)){
+connection.connect(function (err){
     if (err) throw err;
-}
+});
 
 runDatabase();
 
@@ -201,7 +201,7 @@ function addEmployee() {
                 promptQuit();
             });
     }
-
+}
     // add role
     function addRole() {
         connection.query("SELECT * FROM department", function (err, result) {
@@ -244,7 +244,5 @@ function addEmployee() {
                     })
                         promptQuit();
                     });
-                })
+                });
         }
-
-        
