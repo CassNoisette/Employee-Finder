@@ -3,7 +3,7 @@
 const inquirer = require("inquirer");
 
 const fs = require("fs/promises");
-const mysql = require("mysql2");
+const mysql2 = require("mysql2");
 const util = require("util");
 const console = require("console.table");
 
@@ -14,16 +14,14 @@ const connection = mysql2.createConnection({
     port: 3306,
     user: "root",
     password: "rootroot",
-    database: "employees_db"
+    database: "employee_db"
 
 });
 
-connection.connect(function (err){
-    if (err) throw err;
-});
-
+// search database
 runDatabase();
 
+// provide the prompts
 function runDatabase() {
     inquirer.prompt({
         name: 'questions',
@@ -32,7 +30,7 @@ function runDatabase() {
         choices: ['View all employees', 'View all departments','View all roles', 'Add employee', "Add department", 'Add role', 'Update employee role'],
     })
         .then((answers) => {
-            switch (answer.questions) {
+            switch (answers.questions) {
                 case "View all employees":
                     connection
                     .promise()
@@ -52,7 +50,7 @@ function runDatabase() {
             )
             .then(([rows]) => {
               console.table(rows);
-              searchDatabase();
+              runDatabase();
             });
           break;
 
@@ -64,7 +62,7 @@ function runDatabase() {
             )
             .then(([rows]) => {
               console.table(rows);
-              searchDatabase();
+              runDatabase();
             });
           break;
 
@@ -98,19 +96,19 @@ function runDatabase() {
                         return choices;
                     }
                 }
-            ]).then(function (answer) {
-                connection.query("SELECT * FROM role WHERE?", { title: answer.role }, function (err, result) {
+            ]).then(function (answers) {
+                connection.query("SELECT * FROM role WHERE?", { title: answers.role }, function (err, result) {
                     if (err) throw err;
     
                     connection
                     .promise()
                     .query("INSERT INTO employee SET", {
-                        first_name: answer.firstname,
-                        last_name: answer.lastname,
+                        first_name: answers.firstname,
+                        last_name: answers.lastname,
                         role: result[0].id
                     });
                 })
-                promptQuit();
+                runDatabase();
             });
         })
                     break;
